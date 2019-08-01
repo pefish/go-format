@@ -1,4 +1,4 @@
-package p_format
+package go_format
 
 import (
 	"testing"

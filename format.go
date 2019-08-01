@@ -1,4 +1,4 @@
-package p_format
+package go_format
 
 import (
 	"bytes"
@@ -117,7 +117,7 @@ func (this *FormatClass) StructToMapString(in_ interface{}) (out map[string]stri
 
 	out = map[string]string{}
 	for key, val := range result {
-		out[key] = p_reflect.Reflect.ToString(val)
+		out[key] = go_reflect.Reflect.ToString(val)
 	}
 	return
 }
@@ -146,10 +146,10 @@ func (this *FormatClass) MapStringToStructByKey(struct_ interface{}, map_ map[st
 
 func (this *FormatClass) MapToStruct(struct_ interface{}, map_ interface{}) {
 	if reflect.TypeOf(map_).Kind() != reflect.Map {
-		p_error.ThrowInternal(`map_ not a map`)
+		go_error.ThrowInternal(`map_ not a map`)
 	}
 	if reflect.TypeOf(struct_).Kind() != reflect.Ptr {
-		p_error.ThrowInternal(`struct_ not a ptr`)
+		go_error.ThrowInternal(`struct_ not a ptr`)
 	}
 	inrec, err := json.Marshal(map_)
 	if err != nil {
@@ -160,10 +160,10 @@ func (this *FormatClass) MapToStruct(struct_ interface{}, map_ interface{}) {
 
 func (this *FormatClass) SliceToStruct(struct_ interface{}, slice_ interface{}) {
 	if reflect.TypeOf(slice_).Kind() != reflect.Slice {
-		p_error.ThrowInternal(`map_ not a slice`)
+		go_error.ThrowInternal(`map_ not a slice`)
 	}
 	if reflect.TypeOf(struct_).Kind() != reflect.Ptr {
-		p_error.ThrowInternal(`struct_ not a ptr`)
+		go_error.ThrowInternal(`struct_ not a ptr`)
 	}
 	inrec, err := json.Marshal(slice_)
 	if err != nil {
@@ -217,7 +217,7 @@ func (this *FormatClass) MapToSortedQueryString(map_ map[string]string) string {
 func (this *FormatClass) MapInterfaceToMapString(map_ map[string]interface{}) (out map[string]string) {
 	out = map[string]string{}
 	for key, val := range map_ {
-		out[key] = p_reflect.Reflect.ToString(val)
+		out[key] = go_reflect.Reflect.ToString(val)
 	}
 	return
 }
@@ -225,7 +225,7 @@ func (this *FormatClass) MapInterfaceToMapString(map_ map[string]interface{}) (o
 func (this *FormatClass) SliceInterfaceToSliceString(slice_ []interface{}) (out []string) {
 	out = []string{}
 	for _, val := range slice_ {
-		out = append(out, p_reflect.Reflect.ToString(val))
+		out = append(out, go_reflect.Reflect.ToString(val))
 	}
 	return
 }
