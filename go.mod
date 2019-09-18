@@ -1,6 +1,6 @@
 module github.com/pefish/go-format
 
 require (
-	github.com/pefish/go-error v0.2.0
-	github.com/pefish/go-reflect v0.0.3
+	github.com/fatih/structs v1.1.0
+	github.com/mitchellh/mapstructure v1.1.2
 )

@@ -11,11 +11,27 @@ func TestFormatClass_StructToMap(t *testing.T) {
 		B string `json:"haha"`
 	}
 	test := Test{
-		A: 568262448,
+		A: 100,
 		B: `1111`,
 	}
-	fmt.Println(fmt.Sprintf(`%+v`, Format.StructToMap(test)))
-	if Format.StructToMap(test)[`a`].(float64) != 568262448 {
+	fmt.Printf(`%#v`, Format.StructToMap(test))
+	if Format.StructToMap(test)[`a`].(uint64) != 100 {
+		t.Error()
+	}
+}
+
+func TestFormatClass_MapToStruct(t *testing.T) {
+	type Test struct {
+		A uint64 `json:"a"`
+		B string `json:"haha"`
+	}
+	test := Test{}
+	Format.MapToStruct(map[string]interface{}{
+		`a`: 100,
+		`haha`: `1111`,
+	}, &test)
+	fmt.Printf(`%#v`, test)
+	if test.A != 100 {
 		t.Error()
 	}
 }
