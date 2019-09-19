@@ -44,6 +44,24 @@ func (this *FormatClass) MapToStruct(map_ map[string]interface{}, dest interface
 	}
 }
 
+func (this *FormatClass) SliceToStruct(slice_ []interface{}, dest interface{}) {
+	config := &mapstructure.DecoderConfig{
+		WeaklyTypedInput: true,
+		TagName:          "json",
+		Result:           &dest,
+	}
+
+	decoder, err := mapstructure.NewDecoder(config)
+	if err != nil {
+		panic(err)
+	}
+
+	err = decoder.Decode(slice_)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func (this *FormatClass) StringToTime(str string) time.Time {
 	layout := "2006-01-02 15:04:05"
 	t, err := time.Parse(layout, str)

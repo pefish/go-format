@@ -27,11 +27,30 @@ func TestFormatClass_MapToStruct(t *testing.T) {
 	}
 	test := Test{}
 	Format.MapToStruct(map[string]interface{}{
-		`a`: 100,
+		`a`:    100,
 		`haha`: `1111`,
 	}, &test)
 	fmt.Printf(`%#v`, test)
 	if test.A != 100 {
 		t.Error()
 	}
+}
+
+func TestFormatClass_SliceToStruct(t *testing.T) {
+	type Test struct {
+		A uint64 `json:"a"`
+		B string `json:"haha"`
+	}
+	test := []Test{}
+	Format.SliceToStruct([]interface{}{
+		map[string]interface{}{
+			`a`:    100,
+			`haha`: `1111`,
+		},
+		map[string]interface{}{
+			`a`:    100,
+			`haha`: `1111`,
+		},
+	}, &test)
+	fmt.Printf(`%#v`, test)
 }
