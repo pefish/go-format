@@ -21,12 +21,18 @@ func (this *FormatClass) DecodeBase64(str string) ([]byte, error) {
 }
 
 func (this *FormatClass) StructToMap(in_ interface{}) map[string]interface{} {
+	if in_ == nil {
+		return map[string]interface{}{}
+	}
 	struct_ := structs.New(in_)
 	struct_.TagName = `json`
 	return struct_.Map()
 }
 
 func (this *FormatClass) MapToStruct(map_ map[string]interface{}, dest interface{}) {
+	if map_ == nil {
+		return
+	}
 	config := &mapstructure.DecoderConfig{
 		WeaklyTypedInput: true,
 		TagName:          "json",
@@ -45,6 +51,9 @@ func (this *FormatClass) MapToStruct(map_ map[string]interface{}, dest interface
 }
 
 func (this *FormatClass) SliceToStruct(slice_ []interface{}, dest interface{}) {
+	if slice_ == nil {
+		return
+	}
 	config := &mapstructure.DecoderConfig{
 		WeaklyTypedInput: true,
 		TagName:          "json",
