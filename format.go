@@ -659,19 +659,19 @@ func (ft *FormatType) ToString(val interface{}) string {
 	}
 }
 
-func (ft *FormatType) GroupStringSlice(stringSlice []string, groupCount uint64) [][]string {
+func (ft *FormatType) GroupStringSlice(stringSlice []string, countPerGroup uint64) [][]string {
 	resultGroup := make([][]string, 0)
 	start, end := 0, 0
 	for {
 		start = end
-		end += int(groupCount)
+		end += int(countPerGroup)
 		if end > len(stringSlice) {
 			end = len(stringSlice)
 		}
 
 		thisGroup := stringSlice[start:end]
 		resultGroup = append(resultGroup, thisGroup)
-		if len(thisGroup) < int(groupCount) {
+		if len(thisGroup) < int(countPerGroup) {
 			break
 		}
 	}
