@@ -267,4 +267,10 @@ func TestFormatType_GroupStringSlice(t *testing.T) {
 	test.Equal(t, "e", group[1][1])
 	test.Equal(t, 1, len(group[2]))
 	test.Equal(t, "g", group[2][0])
+
+	group1 := FormatInstance.GroupStringSlice(strSlice, 10)
+	test.Equal(t, 1, len(group1))
+	test.Equal(t, 7, len(group1[0]))
+	test.Equal(t, "a", group1[0][0])
+	test.Equal(t, "g", group1[0][6])
 }
