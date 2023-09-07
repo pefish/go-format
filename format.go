@@ -671,7 +671,7 @@ func (ft *FormatType) GroupStringSlice(stringSlice []string, countPerGroup uint6
 
 		thisGroup := stringSlice[start:end]
 		resultGroup = append(resultGroup, thisGroup)
-		if end-start < int(countPerGroup) {
+		if end >= len(stringSlice) {
 			break
 		}
 	}
