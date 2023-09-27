@@ -256,8 +256,9 @@ func TestFormatType_MustToFloat32(t *testing.T) {
 }
 
 func TestFormatType_GroupStringSlice(t *testing.T) {
+	formatInstance := NewFormatInstance[string]()
 	strSlice := []string{"a", "b", "c", "d", "e", "f", "g"}
-	group := FormatInstance.GroupStringSlice(strSlice, 3)
+	group := formatInstance.GroupSlice(strSlice, 3)
 	test.Equal(t, 3, len(group))
 	test.Equal(t, 3, len(group[0]))
 	test.Equal(t, "a", group[0][0])
@@ -268,7 +269,7 @@ func TestFormatType_GroupStringSlice(t *testing.T) {
 	test.Equal(t, 1, len(group[2]))
 	test.Equal(t, "g", group[2][0])
 
-	group1 := FormatInstance.GroupStringSlice(strSlice, 10)
+	group1 := formatInstance.GroupSlice(strSlice, 10)
 	test.Equal(t, 1, len(group1))
 	test.Equal(t, 7, len(group1[0]))
 	test.Equal(t, "a", group1[0][0])
