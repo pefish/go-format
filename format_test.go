@@ -111,10 +111,9 @@ func TestFormatType_MustToInt64(t *testing.T) {
 	var i uint32 = 12
 	test.Equal(t, int64(12), FormatInstance.MustToInt64(i))
 
-	var m bool = true
-	test.Equal(t, int64(1), FormatInstance.MustToInt64(m))
+	test.Equal(t, int64(1), FormatInstance.MustToInt64(true))
 
-	m_, err := FormatInstance.ToInt64(m)
+	m_, err := FormatInstance.ToInt64(true)
 	test.Equal(t, nil, err)
 	test.Equal(t, int64(1), m_)
 
@@ -221,8 +220,8 @@ func TestFormatType_GetValuesInTagFromStruct(t *testing.T) {
 }
 
 func TestFormatType_MustToBool(t *testing.T) {
-	a := `true`
-	test.Equal(t, true, FormatInstance.MustToBool(a))
+	test.Equal(t, true, FormatInstance.MustToBool(`true`))
+	test.Equal(t, false, FormatInstance.MustToBool(`false`))
 }
 
 func TestFormatType_MustToInt(t *testing.T) {

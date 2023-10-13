@@ -140,8 +140,14 @@ func (ft *FormatType[T]) ToInt(val interface{}) (int, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to int`)
 	}
-
-	str, base := ft.findBase(ft.ToString(val))
+	valStr := ft.ToString(val)
+	if valStr == "true" {
+		return 1, nil
+	}
+	if valStr == "false" {
+		return 0, nil
+	}
+	str, base := ft.findBase(valStr)
 	int_, err := strconv.ParseUint(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -161,8 +167,14 @@ func (ft *FormatType[T]) ToInt8(val interface{}) (int8, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to int8`)
 	}
-
-	str, base := ft.findBase(ft.ToString(val))
+	valStr := ft.ToString(val)
+	if valStr == "true" {
+		return 1, nil
+	}
+	if valStr == "false" {
+		return 0, nil
+	}
+	str, base := ft.findBase(valStr)
 	int_, err := strconv.ParseUint(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -182,8 +194,14 @@ func (ft *FormatType[T]) ToBool(val interface{}) (bool, error) {
 	if val == nil {
 		return false, errors.New(`nil cannot convert to bool`)
 	}
-
-	bool_, err := strconv.ParseBool(ft.ToString(val))
+	valStr := ft.ToString(val)
+	if valStr == "true" {
+		return true, nil
+	}
+	if valStr == "false" {
+		return false, nil
+	}
+	bool_, err := strconv.ParseBool(valStr)
 	if err != nil {
 		return false, err
 	}
@@ -217,8 +235,14 @@ func (ft *FormatType[T]) ToInt32(val interface{}) (int32, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to int32`)
 	}
-
-	str, base := ft.findBase(ft.ToString(val))
+	valStr := ft.ToString(val)
+	if valStr == "true" {
+		return 1, nil
+	}
+	if valStr == "false" {
+		return 0, nil
+	}
+	str, base := ft.findBase(valStr)
 	int_, err := strconv.ParseInt(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -238,8 +262,14 @@ func (ft *FormatType[T]) ToInt64(val interface{}) (int64, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to int64`)
 	}
-
-	str, base := ft.findBase(ft.ToString(val))
+	valStr := ft.ToString(val)
+	if valStr == "true" {
+		return 1, nil
+	}
+	if valStr == "false" {
+		return 0, nil
+	}
+	str, base := ft.findBase(valStr)
 	int_, err := strconv.ParseInt(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -259,8 +289,14 @@ func (ft *FormatType[T]) ToUint64(val interface{}) (uint64, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to uint64`)
 	}
-
-	str, base := ft.findBase(ft.ToString(val))
+	valStr := ft.ToString(val)
+	if valStr == "true" {
+		return 1, nil
+	}
+	if valStr == "false" {
+		return 0, nil
+	}
+	str, base := ft.findBase(valStr)
 	int_, err := strconv.ParseUint(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -280,8 +316,14 @@ func (ft *FormatType[T]) ToUint32(val interface{}) (uint32, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to uint32`)
 	}
-
-	str, base := ft.findBase(ft.ToString(val))
+	valStr := ft.ToString(val)
+	if valStr == "true" {
+		return 1, nil
+	}
+	if valStr == "false" {
+		return 0, nil
+	}
+	str, base := ft.findBase(valStr)
 	int_, err := strconv.ParseUint(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -301,8 +343,14 @@ func (ft *FormatType[T]) ToFloat64(val interface{}) (float64, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to float64`)
 	}
-
-	result, err := strconv.ParseFloat(ft.ToString(val), 64)
+	valStr := ft.ToString(val)
+	if valStr == "true" {
+		return 1, nil
+	}
+	if valStr == "false" {
+		return 0, nil
+	}
+	result, err := strconv.ParseFloat(valStr, 64)
 	if err != nil {
 		return 0, err
 	}
@@ -322,7 +370,14 @@ func (ft *FormatType[T]) ToFloat32(val interface{}) (float32, error) {
 		return 0, errors.New(`nil cannot convert to float32`)
 	}
 
-	result, err := strconv.ParseFloat(ft.ToString(val), 64)
+	valStr := ft.ToString(val)
+	if valStr == "true" {
+		return 1, nil
+	}
+	if valStr == "false" {
+		return 0, nil
+	}
+	result, err := strconv.ParseFloat(valStr, 64)
 	if err != nil {
 		return 0, err
 	}
