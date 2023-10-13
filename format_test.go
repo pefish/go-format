@@ -246,8 +246,9 @@ func TestFormatType_MustToUint32(t *testing.T) {
 }
 
 func TestFormatType_MustToFloat64(t *testing.T) {
-	a := "4546.3526"
-	test.Equal(t, 4546.3526, FormatInstance.MustToFloat64(a))
+	test.Equal(t, 4546.3526, FormatInstance.MustToFloat64("4546.3526"))
+	test.Equal(t, float64(4546), FormatInstance.MustToFloat64("4546.0000"))
+	test.Equal(t, float64(0.0042), FormatInstance.MustToFloat64("0.0042"))
 }
 
 func TestFormatType_MustToFloat32(t *testing.T) {

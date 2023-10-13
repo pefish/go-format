@@ -81,14 +81,13 @@ func (ft *FormatType[T]) SliceToStruct(dest interface{}, slice_ []interface{}) e
 	return nil
 }
 
-//
 // GetValuesInTagFromStruct
-//  @Description: 通过反射获取指针中struct的所有tag值. 支持 []*Test{}、Test{}、*Test{}、[]Test{}、*[]Test{}
-//  @receiver ft
-//  @param interf
-//  @param tag
-//  @return []string
 //
+//	@Description: 通过反射获取指针中struct的所有tag值. 支持 []*Test{}、Test{}、*Test{}、[]Test{}、*[]Test{}
+//	@receiver ft
+//	@param interf
+//	@param tag
+//	@return []string
 func (ft *FormatType[T]) GetValuesInTagFromStruct(interf interface{}, tag string) []string {
 	result := make([]string, 0)
 	return ft.getValuesInTagFromStruct(result, reflect.TypeOf(interf), tag)
@@ -142,47 +141,12 @@ func (ft *FormatType[T]) ToInt(val interface{}) (int, error) {
 		return 0, errors.New(`nil cannot convert to int`)
 	}
 
-	kind := reflect.TypeOf(val).Kind()
-	if kind == reflect.String {
-		str, base := ft.findBase(val.(string))
-		int_, err := strconv.ParseUint(str, base, 64)
-		if err != nil {
-			return 0, err
-		}
-		return int(int_), nil
-	} else if kind == reflect.Bool {
-		if val.(bool) {
-			return 1, nil
-		} else {
-			return 0, nil
-		}
-	} else if kind == reflect.Float32 {
-		return int(val.(float32)), nil
-	} else if kind == reflect.Float64 {
-		return int(val.(float64)), nil
-	} else if kind == reflect.Int {
-		return val.(int), nil
-	} else if kind == reflect.Int8 {
-		return int(val.(int8)), nil
-	} else if kind == reflect.Int16 {
-		return int(val.(int16)), nil
-	} else if kind == reflect.Int32 {
-		return int(val.(int32)), nil
-	} else if kind == reflect.Int64 {
-		return int(val.(int64)), nil
-	} else if kind == reflect.Uint {
-		return int(val.(uint)), nil
-	} else if kind == reflect.Uint8 {
-		return int(val.(uint8)), nil
-	} else if kind == reflect.Uint16 {
-		return int(val.(uint16)), nil
-	} else if kind == reflect.Uint32 {
-		return int(val.(uint32)), nil
-	} else if kind == reflect.Uint64 {
-		return int(val.(uint64)), nil
-	} else {
-		return 0, errors.New(`convert not supported: ` + kind.String())
+	str, base := ft.findBase(ft.ToString(val))
+	int_, err := strconv.ParseUint(str, base, 64)
+	if err != nil {
+		return 0, err
 	}
+	return int(int_), nil
 }
 
 func (ft *FormatType[T]) MustToInt8(val interface{}) int8 {
@@ -198,47 +162,12 @@ func (ft *FormatType[T]) ToInt8(val interface{}) (int8, error) {
 		return 0, errors.New(`nil cannot convert to int8`)
 	}
 
-	kind := reflect.TypeOf(val).Kind()
-	if kind == reflect.String {
-		str, base := ft.findBase(val.(string))
-		int_, err := strconv.ParseUint(str, base, 64)
-		if err != nil {
-			return 0, err
-		}
-		return int8(int_), nil
-	} else if kind == reflect.Bool {
-		if val.(bool) {
-			return 1, nil
-		} else {
-			return 0, nil
-		}
-	} else if kind == reflect.Float32 {
-		return int8(val.(float32)), nil
-	} else if kind == reflect.Float64 {
-		return int8(val.(float64)), nil
-	} else if kind == reflect.Int {
-		return int8(val.(int)), nil
-	} else if kind == reflect.Int8 {
-		return val.(int8), nil
-	} else if kind == reflect.Int16 {
-		return int8(val.(int16)), nil
-	} else if kind == reflect.Int32 {
-		return int8(val.(int32)), nil
-	} else if kind == reflect.Int64 {
-		return int8(val.(int64)), nil
-	} else if kind == reflect.Uint {
-		return int8(val.(uint)), nil
-	} else if kind == reflect.Uint8 {
-		return int8(val.(uint8)), nil
-	} else if kind == reflect.Uint16 {
-		return int8(val.(uint16)), nil
-	} else if kind == reflect.Uint32 {
-		return int8(val.(uint32)), nil
-	} else if kind == reflect.Uint64 {
-		return int8(val.(uint64)), nil
-	} else {
-		return 0, errors.New(`convert not supported: ` + kind.String())
+	str, base := ft.findBase(ft.ToString(val))
+	int_, err := strconv.ParseUint(str, base, 64)
+	if err != nil {
+		return 0, err
 	}
+	return int8(int_), nil
 }
 
 func (ft *FormatType[T]) MustToBool(val interface{}) bool {
@@ -254,18 +183,11 @@ func (ft *FormatType[T]) ToBool(val interface{}) (bool, error) {
 		return false, errors.New(`nil cannot convert to bool`)
 	}
 
-	kind := reflect.TypeOf(val).Kind()
-	if kind == reflect.String {
-		bool_, err := strconv.ParseBool(val.(string))
-		if err != nil {
-			return false, err
-		}
-		return bool_, nil
-	} else if kind == reflect.Bool {
-		return val.(bool), nil
-	} else {
-		return false, errors.New(`convert not supported: ` + kind.String())
+	bool_, err := strconv.ParseBool(ft.ToString(val))
+	if err != nil {
+		return false, err
 	}
+	return bool_, nil
 }
 
 func (ft *FormatType[T]) MustToInt32(val interface{}) int32 {
@@ -296,47 +218,12 @@ func (ft *FormatType[T]) ToInt32(val interface{}) (int32, error) {
 		return 0, errors.New(`nil cannot convert to int32`)
 	}
 
-	kind := reflect.TypeOf(val).Kind()
-	if kind == reflect.String {
-		str, base := ft.findBase(val.(string))
-		int_, err := strconv.ParseInt(str, base, 64)
-		if err != nil {
-			return 0, err
-		}
-		return int32(int_), nil
-	} else if kind == reflect.Bool {
-		if val.(bool) {
-			return 1, nil
-		} else {
-			return 0, nil
-		}
-	} else if kind == reflect.Float32 {
-		return int32(val.(float32)), nil
-	} else if kind == reflect.Float64 {
-		return int32(val.(float64)), nil
-	} else if kind == reflect.Int {
-		return int32(val.(int)), nil
-	} else if kind == reflect.Int8 {
-		return int32(val.(int8)), nil
-	} else if kind == reflect.Int16 {
-		return int32(val.(int16)), nil
-	} else if kind == reflect.Int32 {
-		return val.(int32), nil
-	} else if kind == reflect.Int64 {
-		return int32(val.(int64)), nil
-	} else if kind == reflect.Uint {
-		return int32(val.(uint)), nil
-	} else if kind == reflect.Uint8 {
-		return int32(val.(uint8)), nil
-	} else if kind == reflect.Uint16 {
-		return int32(val.(uint16)), nil
-	} else if kind == reflect.Uint32 {
-		return int32(val.(uint32)), nil
-	} else if kind == reflect.Uint64 {
-		return int32(val.(uint64)), nil
-	} else {
-		return 0, errors.New(`convert not supported: ` + kind.String())
+	str, base := ft.findBase(ft.ToString(val))
+	int_, err := strconv.ParseInt(str, base, 64)
+	if err != nil {
+		return 0, err
 	}
+	return int32(int_), nil
 }
 
 func (ft *FormatType[T]) MustToInt64(val interface{}) int64 {
@@ -352,47 +239,12 @@ func (ft *FormatType[T]) ToInt64(val interface{}) (int64, error) {
 		return 0, errors.New(`nil cannot convert to int64`)
 	}
 
-	kind := reflect.TypeOf(val).Kind()
-	if kind == reflect.String {
-		str, base := ft.findBase(val.(string))
-		int_, err := strconv.ParseInt(str, base, 64)
-		if err != nil {
-			return 0, err
-		}
-		return int_, nil
-	} else if kind == reflect.Bool {
-		if val.(bool) {
-			return 1, nil
-		} else {
-			return 0, nil
-		}
-	} else if kind == reflect.Float32 {
-		return int64(val.(float32)), nil
-	} else if kind == reflect.Float64 {
-		return int64(val.(float64)), nil
-	} else if kind == reflect.Int {
-		return int64(val.(int)), nil
-	} else if kind == reflect.Int8 {
-		return int64(val.(int8)), nil
-	} else if kind == reflect.Int16 {
-		return int64(val.(int16)), nil
-	} else if kind == reflect.Int32 {
-		return int64(val.(int32)), nil
-	} else if kind == reflect.Int64 {
-		return val.(int64), nil
-	} else if kind == reflect.Uint {
-		return int64(val.(uint)), nil
-	} else if kind == reflect.Uint8 {
-		return int64(val.(uint8)), nil
-	} else if kind == reflect.Uint16 {
-		return int64(val.(uint16)), nil
-	} else if kind == reflect.Uint32 {
-		return int64(val.(uint32)), nil
-	} else if kind == reflect.Uint64 {
-		return int64(val.(uint64)), nil
-	} else {
-		return 0, errors.New(`convert not supported: ` + kind.String())
+	str, base := ft.findBase(ft.ToString(val))
+	int_, err := strconv.ParseInt(str, base, 64)
+	if err != nil {
+		return 0, err
 	}
+	return int_, nil
 }
 
 func (ft *FormatType[T]) MustToUint64(val interface{}) uint64 {
@@ -408,47 +260,12 @@ func (ft *FormatType[T]) ToUint64(val interface{}) (uint64, error) {
 		return 0, errors.New(`nil cannot convert to uint64`)
 	}
 
-	kind := reflect.TypeOf(val).Kind()
-	if kind == reflect.String {
-		str, base := ft.findBase(val.(string))
-		int_, err := strconv.ParseUint(str, base, 64)
-		if err != nil {
-			return 0, err
-		}
-		return int_, nil
-	} else if kind == reflect.Bool {
-		if val.(bool) {
-			return 1, nil
-		} else {
-			return 0, nil
-		}
-	} else if kind == reflect.Float32 {
-		return uint64(val.(float32)), nil
-	} else if kind == reflect.Float64 {
-		return uint64(val.(float64)), nil
-	} else if kind == reflect.Int {
-		return uint64(val.(int)), nil
-	} else if kind == reflect.Int8 {
-		return uint64(val.(int8)), nil
-	} else if kind == reflect.Int16 {
-		return uint64(val.(int16)), nil
-	} else if kind == reflect.Int32 {
-		return uint64(val.(int32)), nil
-	} else if kind == reflect.Int64 {
-		return uint64(val.(int64)), nil
-	} else if kind == reflect.Uint {
-		return uint64(val.(uint)), nil
-	} else if kind == reflect.Uint8 {
-		return uint64(val.(uint8)), nil
-	} else if kind == reflect.Uint16 {
-		return uint64(val.(uint16)), nil
-	} else if kind == reflect.Uint32 {
-		return uint64(val.(uint32)), nil
-	} else if kind == reflect.Uint64 {
-		return val.(uint64), nil
-	} else {
-		return 0, errors.New(`convert not supported: ` + kind.String())
+	str, base := ft.findBase(ft.ToString(val))
+	int_, err := strconv.ParseUint(str, base, 64)
+	if err != nil {
+		return 0, err
 	}
+	return int_, nil
 }
 
 func (ft *FormatType[T]) MustToUint32(val interface{}) uint32 {
@@ -464,47 +281,12 @@ func (ft *FormatType[T]) ToUint32(val interface{}) (uint32, error) {
 		return 0, errors.New(`nil cannot convert to uint32`)
 	}
 
-	kind := reflect.TypeOf(val).Kind()
-	if kind == reflect.String {
-		str, base := ft.findBase(val.(string))
-		int_, err := strconv.ParseUint(str, base, 64)
-		if err != nil {
-			return 0, err
-		}
-		return uint32(int_), nil
-	} else if kind == reflect.Bool {
-		if val.(bool) {
-			return 1, nil
-		} else {
-			return 0, nil
-		}
-	} else if kind == reflect.Float32 {
-		return uint32(val.(float32)), nil
-	} else if kind == reflect.Float64 {
-		return uint32(val.(float64)), nil
-	} else if kind == reflect.Int {
-		return uint32(val.(int)), nil
-	} else if kind == reflect.Int8 {
-		return uint32(val.(int8)), nil
-	} else if kind == reflect.Int16 {
-		return uint32(val.(int16)), nil
-	} else if kind == reflect.Int32 {
-		return uint32(val.(int32)), nil
-	} else if kind == reflect.Int64 {
-		return uint32(val.(int64)), nil
-	} else if kind == reflect.Uint {
-		return uint32(val.(uint)), nil
-	} else if kind == reflect.Uint8 {
-		return uint32(val.(uint8)), nil
-	} else if kind == reflect.Uint16 {
-		return uint32(val.(uint16)), nil
-	} else if kind == reflect.Uint32 {
-		return val.(uint32), nil
-	} else if kind == reflect.Uint64 {
-		return uint32(val.(uint64)), nil
-	} else {
-		return 0, errors.New(`convert not supported: ` + kind.String())
+	str, base := ft.findBase(ft.ToString(val))
+	int_, err := strconv.ParseUint(str, base, 64)
+	if err != nil {
+		return 0, err
 	}
+	return uint32(int_), nil
 }
 
 func (ft *FormatType[T]) MustToFloat64(val interface{}) float64 {
@@ -520,46 +302,11 @@ func (ft *FormatType[T]) ToFloat64(val interface{}) (float64, error) {
 		return 0, errors.New(`nil cannot convert to float64`)
 	}
 
-	kind := reflect.TypeOf(val).Kind()
-	if kind == reflect.String {
-		result, err := strconv.ParseFloat(val.(string), 64)
-		if err != nil {
-			return 0, err
-		}
-		return result, nil
-	} else if kind == reflect.Bool {
-		if val.(bool) {
-			return 1, nil
-		} else {
-			return 0, nil
-		}
-	} else if kind == reflect.Float32 {
-		return float64(val.(float32)), nil
-	} else if kind == reflect.Float64 {
-		return val.(float64), nil
-	} else if kind == reflect.Int {
-		return float64(val.(int)), nil
-	} else if kind == reflect.Int8 {
-		return float64(val.(int8)), nil
-	} else if kind == reflect.Int16 {
-		return float64(val.(int16)), nil
-	} else if kind == reflect.Int32 {
-		return float64(val.(int32)), nil
-	} else if kind == reflect.Int64 {
-		return float64(val.(int64)), nil
-	} else if kind == reflect.Uint {
-		return float64(val.(uint)), nil
-	} else if kind == reflect.Uint8 {
-		return float64(val.(uint8)), nil
-	} else if kind == reflect.Uint16 {
-		return float64(val.(uint16)), nil
-	} else if kind == reflect.Uint32 {
-		return float64(val.(uint32)), nil
-	} else if kind == reflect.Uint64 {
-		return float64(val.(uint64)), nil
-	} else {
-		return 0, errors.New(`convert not supported: ` + kind.String())
+	result, err := strconv.ParseFloat(ft.ToString(val), 64)
+	if err != nil {
+		return 0, err
 	}
+	return result, nil
 }
 
 func (ft *FormatType[T]) MustToFloat32(val interface{}) float32 {
@@ -575,46 +322,11 @@ func (ft *FormatType[T]) ToFloat32(val interface{}) (float32, error) {
 		return 0, errors.New(`nil cannot convert to float32`)
 	}
 
-	kind := reflect.TypeOf(val).Kind()
-	if kind == reflect.String {
-		result, err := strconv.ParseFloat(val.(string), 64)
-		if err != nil {
-			return 0, err
-		}
-		return float32(result), nil
-	} else if kind == reflect.Bool {
-		if val.(bool) {
-			return 1, nil
-		} else {
-			return 0, nil
-		}
-	} else if kind == reflect.Float32 {
-		return val.(float32), nil
-	} else if kind == reflect.Float64 {
-		return float32(val.(float64)), nil
-	} else if kind == reflect.Int {
-		return float32(val.(int)), nil
-	} else if kind == reflect.Int8 {
-		return float32(val.(int8)), nil
-	} else if kind == reflect.Int16 {
-		return float32(val.(int16)), nil
-	} else if kind == reflect.Int32 {
-		return float32(val.(int32)), nil
-	} else if kind == reflect.Int64 {
-		return float32(val.(int64)), nil
-	} else if kind == reflect.Uint {
-		return float32(val.(uint)), nil
-	} else if kind == reflect.Uint8 {
-		return float32(val.(uint8)), nil
-	} else if kind == reflect.Uint16 {
-		return float32(val.(uint16)), nil
-	} else if kind == reflect.Uint32 {
-		return float32(val.(uint32)), nil
-	} else if kind == reflect.Uint64 {
-		return float32(val.(uint64)), nil
-	} else {
-		return 0, errors.New(`convert not supported: ` + kind.String())
+	result, err := strconv.ParseFloat(ft.ToString(val), 64)
+	if err != nil {
+		return 0, err
 	}
+	return float32(result), nil
 }
 
 func (ft *FormatType[T]) ToString(val interface{}) string {
