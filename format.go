@@ -34,6 +34,7 @@ func (ft *FormatType[T]) StructToMap(in_ interface{}) map[string]interface{} {
 	}
 	struct_ := structs.New(in_)
 	struct_.TagName = `json`
+
 	return struct_.Map()
 }
 
@@ -95,23 +96,22 @@ func (ft *FormatType[T]) GetValuesInTagFromStruct(interf interface{}, tag string
 
 func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect.Type, tag string) []string {
 	realValKind := type_.Kind()
-	if realValKind == reflect.Ptr {
+	switch type_.Kind() {
+	case reflect.Ptr:
 		type_ = type_.Elem()
 		realValKind = type_.Kind()
 		if realValKind == reflect.Slice {
 			type_ = type_.Elem()
 			realValKind = type_.Kind()
 		}
-	} else if realValKind == reflect.Slice {
+	case reflect.Slice:
 		type_ = type_.Elem()
 		realValKind = type_.Kind()
 		if realValKind == reflect.Ptr {
 			type_ = type_.Elem()
 			realValKind = type_.Kind()
 		}
-	} else if realValKind == reflect.Struct {
-
-	} else {
+	default:
 		return result
 	}
 

@@ -25,16 +25,23 @@ type BaseModel struct {
 }
 
 func TestFormatClass_StructToMap(t *testing.T) {
-	type Test struct {
-		A uint64 `json:"a"`
-		B string `json:"haha"`
+	type Nest struct {
+		C string `json:"c"`
 	}
+	type Test struct {
+		A    uint64 `json:"a"`
+		B    string `json:"haha"`
+		Nest `json:"nest,flatten"`
+	}
+
 	testObj := Test{
-		A: 100,
-		B: `1111`,
+		A:    100,
+		B:    `1111`,
+		Nest: Nest{C: "q"},
 	}
 	testMap := FormatInstance.StructToMap(testObj)
 	test.Equal(t, true, testMap["a"].(uint64) == 100)
+	test.Equal(t, "q", testMap["c"].(string))
 }
 
 func TestFormatClass_MapToStruct(t *testing.T) {
