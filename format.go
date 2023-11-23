@@ -121,20 +121,11 @@ func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect
 			realValKind = type_.Kind()
 		}
 	case reflect.Struct:
-		for i := 0; i < type_.NumField(); i++ {
-			fieldType := type_.Field(i).Type
-			tagValue := type_.Field(i).Tag.Get(tagName)
-			if tagValue != `` && fieldType.Kind() != reflect.Struct {
-				tagValues := strings.Split(tagValue, ",")
-				result = append(result, tagValues[0])
-			}
-			result = ft.getValuesInTagFromStruct(result, fieldType, tagName)
-		}
-		return result
+		goto next
 	default:
 		return result
 	}
-
+next:
 	if realValKind == reflect.Struct {
 		for i := 0; i < type_.NumField(); i++ {
 			fieldType := type_.Field(i).Type
