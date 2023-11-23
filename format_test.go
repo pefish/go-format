@@ -15,7 +15,7 @@ type Test struct {
 	TransferMemo string  `json:"tranfer_memo"`
 	Status       uint64  `json:"status"`
 
-	BaseModel
+	BaseModel `json:"baseModel"`
 }
 
 type BaseModel struct {
