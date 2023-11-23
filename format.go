@@ -28,6 +28,15 @@ func (ft *FormatType[T]) DecodeBase64(str string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(str)
 }
 
+func (ft *FormatType[T]) IsZeroValue(val reflect.Value) bool {
+	switch val.Kind() {
+	case reflect.Func, reflect.Map, reflect.Slice:
+		return val.IsNil()
+	default:
+		return val.IsZero()
+	}
+}
+
 func (ft *FormatType[T]) StructToMap(in_ interface{}) map[string]interface{} {
 	if in_ == nil {
 		return map[string]interface{}{}
@@ -94,7 +103,7 @@ func (ft *FormatType[T]) GetValuesInTagFromStruct(interf interface{}, tag string
 	return ft.getValuesInTagFromStruct(result, reflect.TypeOf(interf), tag)
 }
 
-func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect.Type, tag string) []string {
+func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect.Type, tagName string) []string {
 	realValKind := type_.Kind()
 	switch type_.Kind() {
 	case reflect.Ptr:
@@ -111,17 +120,28 @@ func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect
 			type_ = type_.Elem()
 			realValKind = type_.Kind()
 		}
+	case reflect.Struct:
+		for i := 0; i < type_.NumField(); i++ {
+			tagValue := type_.Field(i).Tag.Get(tagName)
+			if tagValue != `` {
+				tagValues := strings.Split(tagValue, ",")
+				result = append(result, tagValues[0])
+			}
+			result = ft.getValuesInTagFromStruct(result, type_.Field(i).Type, tagName)
+		}
+		return result
 	default:
 		return result
 	}
 
 	if realValKind == reflect.Struct {
 		for i := 0; i < type_.NumField(); i++ {
-			tagName := type_.Field(i).Tag.Get(tag)
-			if tagName != `` {
-				result = append(result, type_.Field(i).Tag.Get(tag))
+			tagValue := type_.Field(i).Tag.Get(tagName)
+			if tagValue != `` {
+				tagValues := strings.Split(tagValue, ",")
+				result = append(result, tagValues[0])
 			}
-			result = ft.getValuesInTagFromStruct(result, type_.Field(i).Type, tag)
+			result = ft.getValuesInTagFromStruct(result, type_.Field(i).Type, tagName)
 		}
 	}
 

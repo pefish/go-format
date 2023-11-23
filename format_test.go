@@ -7,7 +7,7 @@ import (
 )
 
 type Test struct {
-	UserId       uint64  `json:"user_id"`
+	UserId       uint64  `json:"user_id,omitempty"`
 	Type         uint64  `json:"type"`
 	OrderNumber  string  `json:"order_number"`
 	Price        float64 `json:"price"`
