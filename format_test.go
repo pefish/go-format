@@ -4,16 +4,18 @@ import (
 	"fmt"
 	"github.com/pefish/go-test-assert"
 	"testing"
+	"time"
 )
 
 type Test struct {
-	UserId       uint64  `json:"user_id,omitempty"`
-	Type         uint64  `json:"type"`
-	OrderNumber  string  `json:"order_number"`
-	Price        float64 `json:"price"`
-	Amount       float64 `json:"amount"`
-	TransferMemo string  `json:"tranfer_memo"`
-	Status       uint64  `json:"status"`
+	UserId       uint64    `json:"user_id,omitempty"`
+	Type         uint64    `json:"type"`
+	OrderNumber  string    `json:"order_number"`
+	Price        float64   `json:"price"`
+	Amount       float64   `json:"amount"`
+	TransferMemo string    `json:"tranfer_memo"`
+	Status       uint64    `json:"status"`
+	Time         time.Time `json:"time"`
 
 	BaseModel `json:"baseModel"`
 }
@@ -203,27 +205,27 @@ func TestFormatType_GetValuesInTagFromStruct(t *testing.T) {
 	// []*Test{}
 	test_ := []*Test{}
 	fields := FormatInstance.GetValuesInTagFromStruct(test_, `json`)
-	test.Equal(t, "[user_id type order_number price amount tranfer_memo status id created_at updated_at]", fmt.Sprint(fields))
+	test.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 
 	// Test{}
 	test1 := Test{}
 	fields = FormatInstance.GetValuesInTagFromStruct(test1, `json`)
-	test.Equal(t, "[user_id type order_number price amount tranfer_memo status id created_at updated_at]", fmt.Sprint(fields))
+	test.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 
 	// *Test{}
 	test2 := Test{}
 	fields = FormatInstance.GetValuesInTagFromStruct(&test2, `json`)
-	test.Equal(t, "[user_id type order_number price amount tranfer_memo status id created_at updated_at]", fmt.Sprint(fields))
+	test.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 
 	// []Test{}
 	test3 := []Test{}
 	fields = FormatInstance.GetValuesInTagFromStruct(test3, `json`)
-	test.Equal(t, "[user_id type order_number price amount tranfer_memo status id created_at updated_at]", fmt.Sprint(fields))
+	test.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 
 	// *[]Test{}
 	test4 := []Test{}
 	fields = FormatInstance.GetValuesInTagFromStruct(&test4, `json`)
-	test.Equal(t, "[user_id type order_number price amount tranfer_memo status id created_at updated_at]", fmt.Sprint(fields))
+	test.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 }
 
 func TestFormatType_MustToBool(t *testing.T) {

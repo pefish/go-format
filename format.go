@@ -105,7 +105,7 @@ func (ft *FormatType[T]) GetValuesInTagFromStruct(interf interface{}, tag string
 
 func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect.Type, tagName string) []string {
 	realValKind := type_.Kind()
-	switch type_.Kind() {
+	switch realValKind {
 	case reflect.Ptr:
 		type_ = type_.Elem()
 		realValKind = type_.Kind()
@@ -121,6 +121,9 @@ func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect
 			realValKind = type_.Kind()
 		}
 	case reflect.Struct:
+		if type_.String() == "time.Time" {
+			return result
+		}
 		goto next
 	default:
 		return result
@@ -130,7 +133,7 @@ next:
 		for i := 0; i < type_.NumField(); i++ {
 			fieldType := type_.Field(i).Type
 			tagValue := type_.Field(i).Tag.Get(tagName)
-			if tagValue != `` && fieldType.Kind() != reflect.Struct {
+			if tagValue != `` && (fieldType.Kind() != reflect.Struct || fieldType.String() == "time.Time") {
 				tagValues := strings.Split(tagValue, ",")
 				result = append(result, tagValues[0])
 			}
