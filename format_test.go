@@ -226,6 +226,11 @@ func TestFormatType_GetValuesInTagFromStruct(t *testing.T) {
 	test4 := []Test{}
 	fields = FormatInstance.GetValuesInTagFromStruct(&test4, `json`)
 	test.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
+
+	// *[]*Test{}
+	test5 := []*Test{}
+	fields = FormatInstance.GetValuesInTagFromStruct(&test5, `json`)
+	test.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 }
 
 func TestFormatType_MustToBool(t *testing.T) {

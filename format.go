@@ -93,7 +93,7 @@ func (ft *FormatType[T]) SliceToStruct(dest interface{}, slice_ []interface{}) e
 
 // GetValuesInTagFromStruct
 //
-//	@Description: 通过反射获取指针中struct的所有tag值. 支持 []*Test{}、Test{}、*Test{}、[]Test{}、*[]Test{}
+//	@Description: 通过反射获取指针中struct的所有tag值. 支持 []*Test{}、*[]*Test{}、Test{}、*Test{}、[]Test{}、*[]Test{}
 //	@receiver ft
 //	@param interf
 //	@param tag
@@ -106,30 +106,12 @@ func (ft *FormatType[T]) GetValuesInTagFromStruct(interf interface{}, tag string
 func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect.Type, tagName string) []string {
 	realValKind := type_.Kind()
 	switch realValKind {
-	case reflect.Ptr:
-		type_ = type_.Elem()
-		realValKind = type_.Kind()
-		if realValKind == reflect.Slice {
-			type_ = type_.Elem()
-			realValKind = type_.Kind()
-		}
-	case reflect.Slice:
-		type_ = type_.Elem()
-		realValKind = type_.Kind()
-		if realValKind == reflect.Ptr {
-			type_ = type_.Elem()
-			realValKind = type_.Kind()
-		}
+	case reflect.Ptr, reflect.Slice:
+		result = ft.getValuesInTagFromStruct(result, type_.Elem(), tagName)
 	case reflect.Struct:
 		if type_.String() == "time.Time" {
 			return result
 		}
-		goto next
-	default:
-		return result
-	}
-next:
-	if realValKind == reflect.Struct {
 		for i := 0; i < type_.NumField(); i++ {
 			fieldType := type_.Field(i).Type
 			tagValue := type_.Field(i).Tag.Get(tagName)
@@ -139,6 +121,8 @@ next:
 			}
 			result = ft.getValuesInTagFromStruct(result, fieldType, tagName)
 		}
+	default:
+		return result
 	}
 
 	return result
