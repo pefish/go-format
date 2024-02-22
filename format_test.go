@@ -2,9 +2,10 @@ package go_format
 
 import (
 	"fmt"
-	"github.com/pefish/go-test-assert"
 	"testing"
 	"time"
+
+	"github.com/pefish/go-test-assert"
 )
 
 type Test struct {
@@ -199,6 +200,11 @@ func TestFormatType_ToString(t *testing.T) {
 
 	a3 := 0xf43f2
 	test.Equal(t, "1000434", FormatInstance.ToString(a3))
+
+	a4 := map[string]interface{}{
+		"test": "test",
+	}
+	test.Equal(t, `{"test":"test"}`, FormatInstance.ToString(a4))
 }
 
 func TestFormatType_GetValuesInTagFromStruct(t *testing.T) {

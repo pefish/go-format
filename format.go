@@ -2,13 +2,15 @@ package go_format
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/fatih/structs"
-	"github.com/mitchellh/mapstructure"
 	"reflect"
 	"strconv"
 	"strings"
+
+	"github.com/fatih/structs"
+	"github.com/mitchellh/mapstructure"
 )
 
 type FormatType[T any] struct {
@@ -397,6 +399,9 @@ func (ft *FormatType[T]) ToString(val interface{}) string {
 		return strconv.FormatInt(value_.Int(), 10)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		return strconv.FormatUint(value_.Uint(), 10)
+	case reflect.Map:
+		b, _ := json.Marshal(value_.Interface())
+		return string(b)
 	case reflect.Ptr:
 		if value_.IsNil() { // IsNil 只接受 chan, func, interface, map, pointer, or slice value
 			return `*nil`
