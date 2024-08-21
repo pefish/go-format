@@ -399,7 +399,7 @@ func (ft *FormatType[T]) ToString(val interface{}) string {
 		return strconv.FormatInt(value_.Int(), 10)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		return strconv.FormatUint(value_.Uint(), 10)
-	case reflect.Map:
+	case reflect.Map, reflect.Array, reflect.Struct, reflect.Slice:
 		b, _ := json.Marshal(value_.Interface())
 		return string(b)
 	case reflect.Ptr:

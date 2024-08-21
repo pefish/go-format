@@ -7,4 +7,4 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 )
 
-require github.com/pefish/go-test-assert v0.0.2
+require github.com/pefish/go-test v0.0.4
