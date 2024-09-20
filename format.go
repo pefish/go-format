@@ -13,24 +13,15 @@ import (
 	"github.com/mitchellh/mapstructure"
 )
 
-type FormatType[T any] struct {
-}
-
-var FormatInstance = NewFormatInstance[interface{}]()
-
-func NewFormatInstance[T any]() *FormatType[T] {
-	return &FormatType[T]{}
-}
-
-func (ft *FormatType[T]) EncodeBase64(str string) string {
+func EncodeBase64(str string) string {
 	return base64.StdEncoding.EncodeToString([]byte(str))
 }
 
-func (ft *FormatType[T]) DecodeBase64(str string) ([]byte, error) {
+func DecodeBase64(str string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(str)
 }
 
-func (ft *FormatType[T]) IsZeroValue(val reflect.Value) bool {
+func IsZeroValue(val reflect.Value) bool {
 	switch val.Kind() {
 	case reflect.Func, reflect.Map, reflect.Slice:
 		return val.IsNil()
@@ -39,7 +30,7 @@ func (ft *FormatType[T]) IsZeroValue(val reflect.Value) bool {
 	}
 }
 
-func (ft *FormatType[T]) StructToMap(in_ interface{}) map[string]interface{} {
+func StructToMap(in_ interface{}) map[string]interface{} {
 	if in_ == nil {
 		return map[string]interface{}{}
 	}
@@ -49,7 +40,7 @@ func (ft *FormatType[T]) StructToMap(in_ interface{}) map[string]interface{} {
 	return struct_.Map()
 }
 
-func (ft *FormatType[T]) MapToStruct(dest interface{}, map_ map[string]interface{}) error {
+func MapToStruct(dest interface{}, map_ map[string]interface{}) error {
 	if map_ == nil {
 		return fmt.Errorf("map is nil")
 	}
@@ -71,7 +62,7 @@ func (ft *FormatType[T]) MapToStruct(dest interface{}, map_ map[string]interface
 	return nil
 }
 
-func (ft *FormatType[T]) SliceToStruct(dest interface{}, slice_ []interface{}) error {
+func SliceToStruct(dest interface{}, slice_ []interface{}) error {
 	if slice_ == nil {
 		return fmt.Errorf("slice is nil")
 	}
@@ -100,16 +91,16 @@ func (ft *FormatType[T]) SliceToStruct(dest interface{}, slice_ []interface{}) e
 //	@param interf
 //	@param tag
 //	@return []string
-func (ft *FormatType[T]) GetValuesInTagFromStruct(interf interface{}, tag string) []string {
+func GetValuesInTagFromStruct(interf interface{}, tag string) []string {
 	result := make([]string, 0)
-	return ft.getValuesInTagFromStruct(result, reflect.TypeOf(interf), tag)
+	return getValuesInTagFromStruct(result, reflect.TypeOf(interf), tag)
 }
 
-func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect.Type, tagName string) []string {
+func getValuesInTagFromStruct(result []string, type_ reflect.Type, tagName string) []string {
 	realValKind := type_.Kind()
 	switch realValKind {
 	case reflect.Ptr, reflect.Slice:
-		result = ft.getValuesInTagFromStruct(result, type_.Elem(), tagName)
+		result = getValuesInTagFromStruct(result, type_.Elem(), tagName)
 	case reflect.Struct:
 		if type_.String() == "time.Time" {
 			return result
@@ -121,7 +112,7 @@ func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect
 				tagValues := strings.Split(tagValue, ",")
 				result = append(result, tagValues[0])
 			}
-			result = ft.getValuesInTagFromStruct(result, fieldType, tagName)
+			result = getValuesInTagFromStruct(result, fieldType, tagName)
 		}
 	default:
 		return result
@@ -130,26 +121,26 @@ func (ft *FormatType[T]) getValuesInTagFromStruct(result []string, type_ reflect
 	return result
 }
 
-func (ft *FormatType[T]) MustToInt(val interface{}) int {
-	result, err := ft.ToInt(val)
+func MustToInt(val interface{}) int {
+	result, err := ToInt(val)
 	if err != nil {
 		panic(err)
 	}
 	return result
 }
 
-func (ft *FormatType[T]) ToInt(val interface{}) (int, error) {
+func ToInt(val interface{}) (int, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to int`)
 	}
-	valStr := ft.ToString(val)
+	valStr := ToString(val)
 	if valStr == "true" {
 		return 1, nil
 	}
 	if valStr == "false" {
 		return 0, nil
 	}
-	str, base := ft.findBase(valStr)
+	str, base := findBase(valStr)
 	int_, err := strconv.ParseUint(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -157,26 +148,26 @@ func (ft *FormatType[T]) ToInt(val interface{}) (int, error) {
 	return int(int_), nil
 }
 
-func (ft *FormatType[T]) MustToInt8(val interface{}) int8 {
-	result, err := ft.ToInt8(val)
+func MustToInt8(val interface{}) int8 {
+	result, err := ToInt8(val)
 	if err != nil {
 		panic(err)
 	}
 	return result
 }
 
-func (ft *FormatType[T]) ToInt8(val interface{}) (int8, error) {
+func ToInt8(val interface{}) (int8, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to int8`)
 	}
-	valStr := ft.ToString(val)
+	valStr := ToString(val)
 	if valStr == "true" {
 		return 1, nil
 	}
 	if valStr == "false" {
 		return 0, nil
 	}
-	str, base := ft.findBase(valStr)
+	str, base := findBase(valStr)
 	int_, err := strconv.ParseUint(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -184,19 +175,19 @@ func (ft *FormatType[T]) ToInt8(val interface{}) (int8, error) {
 	return int8(int_), nil
 }
 
-func (ft *FormatType[T]) MustToBool(val interface{}) bool {
-	result, err := ft.ToBool(val)
+func MustToBool(val interface{}) bool {
+	result, err := ToBool(val)
 	if err != nil {
 		panic(err)
 	}
 	return result
 }
 
-func (ft *FormatType[T]) ToBool(val interface{}) (bool, error) {
+func ToBool(val interface{}) (bool, error) {
 	if val == nil {
 		return false, errors.New(`nil cannot convert to bool`)
 	}
-	valStr := ft.ToString(val)
+	valStr := ToString(val)
 	if valStr == "true" {
 		return true, nil
 	}
@@ -210,15 +201,15 @@ func (ft *FormatType[T]) ToBool(val interface{}) (bool, error) {
 	return bool_, nil
 }
 
-func (ft *FormatType[T]) MustToInt32(val interface{}) int32 {
-	result, err := ft.ToInt32(val)
+func MustToInt32(val interface{}) int32 {
+	result, err := ToInt32(val)
 	if err != nil {
 		panic(err)
 	}
 	return result
 }
 
-func (ft *FormatType[T]) findBase(str string) (string, int) {
+func findBase(str string) (string, int) {
 	base := 10
 	if strings.HasPrefix(str, "0x") {
 		base = 16
@@ -233,18 +224,18 @@ func (ft *FormatType[T]) findBase(str string) (string, int) {
 	return str, base
 }
 
-func (ft *FormatType[T]) ToInt32(val interface{}) (int32, error) {
+func ToInt32(val interface{}) (int32, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to int32`)
 	}
-	valStr := ft.ToString(val)
+	valStr := ToString(val)
 	if valStr == "true" {
 		return 1, nil
 	}
 	if valStr == "false" {
 		return 0, nil
 	}
-	str, base := ft.findBase(valStr)
+	str, base := findBase(valStr)
 	int_, err := strconv.ParseInt(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -252,26 +243,26 @@ func (ft *FormatType[T]) ToInt32(val interface{}) (int32, error) {
 	return int32(int_), nil
 }
 
-func (ft *FormatType[T]) MustToInt64(val interface{}) int64 {
-	result, err := ft.ToInt64(val)
+func MustToInt64(val interface{}) int64 {
+	result, err := ToInt64(val)
 	if err != nil {
 		panic(err)
 	}
 	return result
 }
 
-func (ft *FormatType[T]) ToInt64(val interface{}) (int64, error) {
+func ToInt64(val interface{}) (int64, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to int64`)
 	}
-	valStr := ft.ToString(val)
+	valStr := ToString(val)
 	if valStr == "true" {
 		return 1, nil
 	}
 	if valStr == "false" {
 		return 0, nil
 	}
-	str, base := ft.findBase(valStr)
+	str, base := findBase(valStr)
 	int_, err := strconv.ParseInt(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -279,26 +270,26 @@ func (ft *FormatType[T]) ToInt64(val interface{}) (int64, error) {
 	return int_, nil
 }
 
-func (ft *FormatType[T]) MustToUint64(val interface{}) uint64 {
-	result, err := ft.ToUint64(val)
+func MustToUint64(val interface{}) uint64 {
+	result, err := ToUint64(val)
 	if err != nil {
 		panic(err)
 	}
 	return result
 }
 
-func (ft *FormatType[T]) ToUint64(val interface{}) (uint64, error) {
+func ToUint64(val interface{}) (uint64, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to uint64`)
 	}
-	valStr := ft.ToString(val)
+	valStr := ToString(val)
 	if valStr == "true" {
 		return 1, nil
 	}
 	if valStr == "false" {
 		return 0, nil
 	}
-	str, base := ft.findBase(valStr)
+	str, base := findBase(valStr)
 	int_, err := strconv.ParseUint(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -306,26 +297,26 @@ func (ft *FormatType[T]) ToUint64(val interface{}) (uint64, error) {
 	return int_, nil
 }
 
-func (ft *FormatType[T]) MustToUint32(val interface{}) uint32 {
-	result, err := ft.ToUint32(val)
+func MustToUint32(val interface{}) uint32 {
+	result, err := ToUint32(val)
 	if err != nil {
 		panic(err)
 	}
 	return result
 }
 
-func (ft *FormatType[T]) ToUint32(val interface{}) (uint32, error) {
+func ToUint32(val interface{}) (uint32, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to uint32`)
 	}
-	valStr := ft.ToString(val)
+	valStr := ToString(val)
 	if valStr == "true" {
 		return 1, nil
 	}
 	if valStr == "false" {
 		return 0, nil
 	}
-	str, base := ft.findBase(valStr)
+	str, base := findBase(valStr)
 	int_, err := strconv.ParseUint(str, base, 64)
 	if err != nil {
 		return 0, err
@@ -333,19 +324,19 @@ func (ft *FormatType[T]) ToUint32(val interface{}) (uint32, error) {
 	return uint32(int_), nil
 }
 
-func (ft *FormatType[T]) MustToFloat64(val interface{}) float64 {
-	result, err := ft.ToFloat64(val)
+func MustToFloat64(val interface{}) float64 {
+	result, err := ToFloat64(val)
 	if err != nil {
 		panic(err)
 	}
 	return result
 }
 
-func (ft *FormatType[T]) ToFloat64(val interface{}) (float64, error) {
+func ToFloat64(val interface{}) (float64, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to float64`)
 	}
-	valStr := ft.ToString(val)
+	valStr := ToString(val)
 	if valStr == "true" {
 		return 1, nil
 	}
@@ -359,20 +350,20 @@ func (ft *FormatType[T]) ToFloat64(val interface{}) (float64, error) {
 	return result, nil
 }
 
-func (ft *FormatType[T]) MustToFloat32(val interface{}) float32 {
-	result, err := ft.ToFloat32(val)
+func MustToFloat32(val interface{}) float32 {
+	result, err := ToFloat32(val)
 	if err != nil {
 		panic(err)
 	}
 	return result
 }
 
-func (ft *FormatType[T]) ToFloat32(val interface{}) (float32, error) {
+func ToFloat32(val interface{}) (float32, error) {
 	if val == nil {
 		return 0, errors.New(`nil cannot convert to float32`)
 	}
 
-	valStr := ft.ToString(val)
+	valStr := ToString(val)
 	if valStr == "true" {
 		return 1, nil
 	}
@@ -386,7 +377,7 @@ func (ft *FormatType[T]) ToFloat32(val interface{}) (float32, error) {
 	return float32(result), nil
 }
 
-func (ft *FormatType[T]) ToString(val interface{}) string {
+func ToString(val interface{}) string {
 	value_ := reflect.ValueOf(val)
 	switch value_.Kind() {
 	case reflect.String:
@@ -406,27 +397,41 @@ func (ft *FormatType[T]) ToString(val interface{}) string {
 		if value_.IsNil() { // IsNil 只接受 chan, func, interface, map, pointer, or slice value
 			return `*nil`
 		}
-		return ft.ToString(value_.Elem().Interface())
+		return ToString(value_.Elem().Interface())
 	default:
 		return fmt.Sprint(val)
 	}
 }
 
-func (ft *FormatType[T]) GroupSlice(slice []T, countPerGroup uint64) [][]T {
+func GroupSlice[T any](slice []T, countPerGroup int) [][]T {
 	resultGroup := make([][]T, 0)
-	start, end := 0, 0
+
+	intValues := GroupInt(len(slice), countPerGroup)
+
+	for i, intValue := range intValues {
+		start := 0
+		if i > 0 {
+			start = i * intValues[i-1]
+		}
+		resultGroup = append(resultGroup, slice[start:start+intValue])
+	}
+	return resultGroup
+}
+
+// 对数值进行分组。例如 35 使用 10 分组结果是 [10,10,10,5]
+func GroupInt[T int | uint | int64 | uint64](number T, sliceBy T) []T {
+	results := make([]T, 0)
+	var start, end T = 0, 0
 	for {
 		start = end
-		end += int(countPerGroup)
-		if end > len(slice) {
-			end = len(slice)
+		end += sliceBy
+		if end > number {
+			end = number
 		}
-
-		thisGroup := slice[start:end]
-		resultGroup = append(resultGroup, thisGroup)
-		if end >= len(slice) {
+		results = append(results, end-start)
+		if end >= number {
 			break
 		}
 	}
-	return resultGroup
+	return results
 }
