@@ -308,3 +308,14 @@ func TestGroupInt(t *testing.T) {
 	results := GroupInt(34, 10)
 	fmt.Println(results)
 }
+
+func TestUnderscoreToUpperCamelCase(t *testing.T) {
+	result := UnderscoreToCamelCase("gsfghs_bfgbsg_sgg")
+	fmt.Println(result)
+	go_test_.Equal(t, "GsfghsBfgbsgSgg", result)
+}
+
+func TestCamelCaseToUnderscore(t *testing.T) {
+	result := CamelCaseToUnderscore("FuckYou")
+	go_test_.Equal(t, "fuck_you", result)
+}

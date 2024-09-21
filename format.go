@@ -8,10 +8,38 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/fatih/structs"
 	"github.com/mitchellh/mapstructure"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
+
+// 下划线单词转为驼峰单词
+func UnderscoreToCamelCase(s string) string {
+	s = strings.Replace(s, "_", " ", -1)
+	caser := cases.Title(language.BrazilianPortuguese)
+	s = caser.String(s)
+	return strings.Replace(s, " ", "", -1)
+}
+
+// 驼峰单词转下划线单词
+func CamelCaseToUnderscore(s string) string {
+	var output []rune
+	for i, r := range s {
+		if i == 0 {
+			output = append(output, unicode.ToLower(r))
+		} else {
+			if unicode.IsUpper(r) {
+				output = append(output, '_')
+			}
+
+			output = append(output, unicode.ToLower(r))
+		}
+	}
+	return string(output)
+}
 
 func EncodeBase64(str string) string {
 	return base64.StdEncoding.EncodeToString([]byte(str))

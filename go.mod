@@ -7,4 +7,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 )
 
-require github.com/pefish/go-test v0.0.4
+require (
+	github.com/pefish/go-test v0.0.4
+	golang.org/x/text v0.18.0
+)
