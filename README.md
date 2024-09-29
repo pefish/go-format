@@ -12,7 +12,6 @@ b := 0.34
 a = &b
 test.Equal(t, "0.34", Reflect.ToString(a))
 
-
 type BType struct {
     B1 int
 }
