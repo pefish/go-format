@@ -41,6 +41,24 @@ func CamelCaseToUnderscore(s string) string {
 	return string(output)
 }
 
+func CamelCaseToWords(s string) []string {
+	results := make([]string, 0)
+	startIndex := 0
+	for i, r := range s {
+		if i == 0 {
+			continue
+		}
+		if unicode.IsUpper(r) {
+			results = append(results, s[startIndex:i])
+			startIndex = i
+		}
+		if i == len(s)-1 {
+			results = append(results, s[startIndex:])
+		}
+	}
+	return results
+}
+
 func EncodeBase64(str string) string {
 	return base64.StdEncoding.EncodeToString([]byte(str))
 }

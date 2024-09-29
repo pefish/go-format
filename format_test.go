@@ -319,3 +319,11 @@ func TestCamelCaseToUnderscore(t *testing.T) {
 	result := CamelCaseToUnderscore("FuckYou")
 	go_test_.Equal(t, "fuck_you", result)
 }
+
+func TestCamelCaseToWords(t *testing.T) {
+	results := CamelCaseToWords("fuckYou988MyGod")
+	go_test_.Equal(t, "fuck", results[0])
+	go_test_.Equal(t, "You988", results[1])
+	go_test_.Equal(t, "My", results[2])
+	go_test_.Equal(t, "God", results[3])
+}
