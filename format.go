@@ -437,6 +437,9 @@ func ToString(val interface{}) string {
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		return strconv.FormatUint(value_.Uint(), 10)
 	case reflect.Map, reflect.Array, reflect.Struct, reflect.Slice:
+		if a, ok := val.([]byte); ok {
+			return string(a)
+		}
 		b, _ := json.Marshal(value_.Interface())
 		return string(b)
 	case reflect.Ptr:

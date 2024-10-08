@@ -214,6 +214,10 @@ func TestFormatType_ToString(t *testing.T) {
 		"go_test_": "go_test_",
 	}
 	go_test_.Equal(t, `{"go_test_":"go_test_"}`, ToString(a4))
+
+	go_test_.Equal(t, `["1","2"]`, ToString([]string{"1", "2"}))
+
+	go_test_.Equal(t, `Aa`, ToString([]byte{65, 97}))
 }
 
 func TestFormatType_GetValuesInTagFromStruct(t *testing.T) {
