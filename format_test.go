@@ -290,7 +290,9 @@ func TestFormatType_MustToFloat32(t *testing.T) {
 
 func TestFormatType_GroupSlice(t *testing.T) {
 	strSlice := []string{"a", "b", "c", "d", "e", "f", "g"}
-	group := GroupSlice(strSlice, 3)
+	group := GroupSlice(strSlice, &GroupOpts{
+		CountPerGroup: 3,
+	})
 	go_test_.Equal(t, 3, len(group))
 	go_test_.Equal(t, 3, len(group[0]))
 	go_test_.Equal(t, "a", group[0][0])
@@ -301,7 +303,9 @@ func TestFormatType_GroupSlice(t *testing.T) {
 	go_test_.Equal(t, 1, len(group[2]))
 	go_test_.Equal(t, "g", group[2][0])
 
-	group1 := GroupSlice(strSlice, 10)
+	group1 := GroupSlice(strSlice, &GroupOpts{
+		CountPerGroup: 10,
+	})
 	go_test_.Equal(t, 1, len(group1))
 	go_test_.Equal(t, 7, len(group1[0]))
 	go_test_.Equal(t, "a", group1[0][0])
@@ -310,6 +314,14 @@ func TestFormatType_GroupSlice(t *testing.T) {
 
 func TestGroupInt(t *testing.T) {
 	results := GroupInt(34, 10)
+	fmt.Println(results)
+}
+
+func TestGroupString(t *testing.T) {
+	str := "gsd449998d88gsgsrt"
+	results := GroupString(str, &GroupOpts{
+		GroupCount: 3,
+	})
 	fmt.Println(results)
 }
 
@@ -330,4 +342,15 @@ func TestCamelCaseToWords(t *testing.T) {
 	go_test_.Equal(t, "You988", results[1])
 	go_test_.Equal(t, "My", results[2])
 	go_test_.Equal(t, "God", results[3])
+}
+
+func TestEncodePefish(t *testing.T) {
+	result := EncodePefish("fuckYou988MyGod")
+	fmt.Println(result)
+}
+
+func TestDecodePefish(t *testing.T) {
+	result, err := DecodePefish("YzFlY185YzFjMjVmOC1jY2I9MTlfZS00NDJmLTk1OWYtPTg4MmY4YzA3YV8xZWEwOTUxOWUwZDk9MGYzZjFlODMyNjkxYmIy")
+	go_test_.Equal(t, nil, err)
+	go_test_.Equal(t, "fuckYou988MyGod", result)
 }

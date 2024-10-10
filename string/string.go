@@ -1,4 +1,4 @@
-package string
+package go_format_string
 
 import (
 	"math/rand"
@@ -185,4 +185,19 @@ func randomStringFromDic(dictionary string, count int32) (string, error) {
 	}
 
 	return string(b), nil
+}
+
+func Insert(source string, target string, index int) (string, error) {
+	if index > len(target) {
+		return "", errors.Errorf("Index too large, target string length is <%d>", len(target))
+	}
+	return target[:index] + source + target[index:], nil
+}
+
+func MustInsert(source string, target string, index int) string {
+	result, err := Insert(source, target, index)
+	if err != nil {
+		panic(err)
+	}
+	return result
 }

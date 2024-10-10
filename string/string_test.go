@@ -1,4 +1,4 @@
-package string
+package go_format_string
 
 import (
 	"testing"
@@ -12,4 +12,10 @@ func TestBetweenAnd(t *testing.T) {
 	go_test_.Equal(t, "tq", results[0])
 	go_test_.Equal(t, "hrwuh", results[1])
 	go_test_.Equal(t, "rg", results[2])
+}
+
+func TestInsert(t *testing.T) {
+	result, err := Insert("9", "012345", 6)
+	go_test_.Equal(t, nil, err)
+	go_test_.Equal(t, "0123459", result)
 }

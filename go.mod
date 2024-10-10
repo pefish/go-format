@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/pefish/go-test v0.0.4
 	github.com/pkg/errors v0.9.1
 	golang.org/x/text v0.18.0
