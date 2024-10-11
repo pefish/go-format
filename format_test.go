@@ -18,7 +18,7 @@ type Test struct {
 	Status       uint64    `json:"status"`
 	Time         time.Time `json:"time"`
 
-	BaseModel `json:"baseModel"`
+	BaseModel
 }
 
 type BaseModel struct {
@@ -220,36 +220,46 @@ func TestFormatType_ToString(t *testing.T) {
 	go_test_.Equal(t, `Aa`, ToString([]byte{65, 97}))
 }
 
-func TestFormatType_GetValuesInTagFromStruct(t *testing.T) {
+func TestFormatType_FetchTags(t *testing.T) {
 	// []*Test{}
 	test_ := []*Test{}
-	fields := GetValuesInTagFromStruct(test_, `json`)
+	fields := FetchTags(test_, `json`)
 	go_test_.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 
 	// Test{}
 	test1 := Test{}
-	fields = GetValuesInTagFromStruct(test1, `json`)
+	fields = FetchTags(test1, `json`)
 	go_test_.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 
 	// *Test{}
 	test2 := Test{}
-	fields = GetValuesInTagFromStruct(&test2, `json`)
+	fields = FetchTags(&test2, `json`)
 	go_test_.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 
 	// []Test{}
 	test3 := []Test{}
-	fields = GetValuesInTagFromStruct(test3, `json`)
+	fields = FetchTags(test3, `json`)
 	go_test_.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 
 	// *[]Test{}
 	test4 := []Test{}
-	fields = GetValuesInTagFromStruct(&test4, `json`)
+	fields = FetchTags(&test4, `json`)
 	go_test_.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
 
 	// *[]*Test{}
 	test5 := []*Test{}
-	fields = GetValuesInTagFromStruct(&test5, `json`)
+	fields = FetchTags(&test5, `json`)
 	go_test_.Equal(t, "[user_id type order_number price amount tranfer_memo status time id created_at updated_at]", fmt.Sprint(fields))
+
+	test6 := struct {
+		A string `json:"a"`
+		B []struct {
+			C string `json:"c"`
+		} `json:"b"`
+	}{}
+	fields = FetchTags(&test6, `json`)
+	go_test_.Equal(t, "[a b]", fmt.Sprint(fields))
+
 }
 
 func TestFormatType_MustToBool(t *testing.T) {

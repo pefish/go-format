@@ -135,41 +135,56 @@ func SliceToStruct(dest interface{}, slice_ []interface{}) error {
 	return nil
 }
 
-// GetValuesInTagFromStruct
+// FetchTags
 //
-//	@Description: 通过反射获取指针中struct的所有tag值. 支持 []*Test{}、*[]*Test{}、Test{}、*Test{}、[]Test{}、*[]Test{}
-//	@receiver ft
+//	@Description: 通过反射获取所有 tag 值，只搜寻一层。 支持 []*Test{}、*[]*Test{}、Test{}、*Test{}、[]Test{}、*[]Test{}
 //	@param interf
 //	@param tag
 //	@return []string
-func GetValuesInTagFromStruct(interf interface{}, tag string) []string {
-	result := make([]string, 0)
-	return getValuesInTagFromStruct(result, reflect.TypeOf(interf), tag)
-}
-
-func getValuesInTagFromStruct(result []string, type_ reflect.Type, tagName string) []string {
-	realValKind := type_.Kind()
-	switch realValKind {
-	case reflect.Ptr, reflect.Slice:
-		result = getValuesInTagFromStruct(result, type_.Elem(), tagName)
-	case reflect.Struct:
-		if type_.String() == "time.Time" {
-			return result
+func FetchTags(interf interface{}, tagName string) []string {
+	type_ := reflect.TypeOf(interf)
+	// 剥离 slice 和 指针
+strip:
+	for {
+		switch type_.Kind() {
+		case reflect.Ptr, reflect.Slice:
+			type_ = type_.Elem()
+		default:
+			break strip
 		}
-		for i := 0; i < type_.NumField(); i++ {
-			fieldType := type_.Field(i).Type
-			tagValue := type_.Field(i).Tag.Get(tagName)
-			if tagValue != `` && (fieldType.Kind() != reflect.Struct || fieldType.String() == "time.Time") {
-				tagValues := strings.Split(tagValue, ",")
-				result = append(result, tagValues[0])
-			}
-			result = getValuesInTagFromStruct(result, fieldType, tagName)
-		}
-	default:
-		return result
 	}
 
-	return result
+	if type_.Kind() != reflect.Struct {
+		return make([]string, 0)
+	}
+
+	results := make([]string, 0)
+
+	// struct
+	for i := 0; i < type_.NumField(); i++ {
+		fieldType := type_.Field(i).Type
+		tagValue := type_.Field(i).Tag.Get(tagName)
+		if tagValue == "" {
+			if fieldType.Kind() != reflect.Struct {
+				continue
+			}
+			// 元素是 struct，再搜寻一层
+			for i := 0; i < fieldType.NumField(); i++ {
+				tagValue := fieldType.Field(i).Tag.Get(tagName)
+				if tagValue == "" {
+					continue
+				}
+				tagValues := strings.Split(tagValue, ",")
+				results = append(results, tagValues[0])
+			}
+			continue
+		}
+
+		tagValues := strings.Split(tagValue, ",")
+		results = append(results, tagValues[0])
+	}
+
+	return results
 }
 
 func MustToInt(val interface{}) int {
