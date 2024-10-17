@@ -11,6 +11,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"unicode"
 
 	"github.com/fatih/structs"
@@ -625,4 +626,14 @@ func randomCountInt(start int, end int, count int) []int {
 	}
 
 	return results
+}
+
+func SyncMapToMap(m *sync.Map) map[string]any {
+	result := make(map[string]any, 0)
+	m.Range(func(key, value any) bool {
+		result[key.(string)] = value
+		return true
+	})
+
+	return result
 }
