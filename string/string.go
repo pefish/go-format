@@ -132,6 +132,23 @@ func StartWith(str string, substr string) bool {
 	return strings.HasPrefix(str, substr)
 }
 
+func Indexes(str string, substr string) []int {
+	results := make([]int, 0)
+	for {
+		i := strings.Index(str, substr)
+		if i == -1 {
+			break
+		}
+		index := i
+		if len(results) > 0 {
+			index += results[len(results)-1] + len(substr)
+		}
+		results = append(results, index)
+		str = str[i+len(substr):]
+	}
+	return results
+}
+
 func BetweenAnd(str string, startStr string, endStr string) []string {
 	arr := strings.Split(str, startStr)
 	if len(arr) <= 1 {

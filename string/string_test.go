@@ -19,3 +19,9 @@ func TestInsert(t *testing.T) {
 	go_test_.Equal(t, nil, err)
 	go_test_.Equal(t, "0123459", result)
 }
+
+func TestIndexes(t *testing.T) {
+	results := Indexes("59852645762485752776543352762", "762")
+	go_test_.Equal(t, 8, results[0])
+	go_test_.Equal(t, 26, results[1])
+}
