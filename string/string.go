@@ -149,24 +149,27 @@ func Indexes(str string, substr string) []int {
 	return results
 }
 
+// 倒着找，substrs 中谁先找到就返回谁的 index
 func LastIndex(str string, substrs []string) int {
+	result := -1
 	for _, substr := range substrs {
 		index := strings.LastIndex(str, substr)
-		if index != -1 {
-			return index
+		if index != -1 && index > result {
+			result = index
 		}
 	}
-	return -1
+	return result
 }
 
 func Index(str string, substrs []string) int {
+	result := -1
 	for _, substr := range substrs {
 		index := strings.Index(str, substr)
-		if index != -1 {
-			return index
+		if index != -1 && index < result {
+			result = index
 		}
 	}
-	return -1
+	return result
 }
 
 func BetweenAnd(str string, startStr string, endStr string) []string {
