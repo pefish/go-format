@@ -25,3 +25,10 @@ func TestIndexes(t *testing.T) {
 	go_test_.Equal(t, 8, results[0])
 	go_test_.Equal(t, 26, results[1])
 }
+
+func TestLastIndex(t *testing.T) {
+	result := LastIndex("123456789", []string{"8", "6"})
+	go_test_.Equal(t, 7, result)
+	result = LastIndex("12345679", []string{"8", "6"})
+	go_test_.Equal(t, 5, result)
+}

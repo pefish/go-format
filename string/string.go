@@ -149,6 +149,26 @@ func Indexes(str string, substr string) []int {
 	return results
 }
 
+func LastIndex(str string, substrs []string) int {
+	for _, substr := range substrs {
+		index := strings.LastIndex(str, substr)
+		if index != -1 {
+			return index
+		}
+	}
+	return -1
+}
+
+func Index(str string, substrs []string) int {
+	for _, substr := range substrs {
+		index := strings.Index(str, substr)
+		if index != -1 {
+			return index
+		}
+	}
+	return -1
+}
+
 func BetweenAnd(str string, startStr string, endStr string) []string {
 	arr := strings.Split(str, startStr)
 	if len(arr) <= 1 {
