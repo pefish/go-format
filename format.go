@@ -18,6 +18,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mitchellh/mapstructure"
 	go_format_string "github.com/pefish/go-format/string"
+	go_format_type "github.com/pefish/go-format/type"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
@@ -473,87 +474,6 @@ func ToString(val interface{}) string {
 	}
 }
 
-type GroupOpts struct {
-	CountPerGroup int
-	GroupCount    int
-}
-
-func GroupSlice[T any](slice []T, ops *GroupOpts) [][]T {
-	resultGroup := make([][]T, 0)
-
-	countPerGroup := ops.CountPerGroup
-	if countPerGroup == 0 {
-		groupCount := ops.GroupCount
-		if groupCount == 0 {
-			groupCount = 1
-		}
-		countPerGroup = len(slice) / ops.GroupCount
-		if len(slice)%ops.GroupCount > 0 {
-			countPerGroup += 1
-		}
-	}
-
-	intValues := GroupInt(len(slice), countPerGroup)
-
-	for i, intValue := range intValues {
-		start := 0
-		if i > 0 {
-			start = i * intValues[i-1]
-		}
-		resultGroup = append(resultGroup, slice[start:start+intValue])
-	}
-	return resultGroup
-}
-
-// 对数值进行分组。例如 35 使用 10 分组结果是 [10,10,10,5]
-func GroupInt[T int | uint | int64 | uint64](number T, sliceBy T) []T {
-	results := make([]T, 0)
-	var start, end T = 0, 0
-	for {
-		start = end
-		end += sliceBy
-		if end > number {
-			end = number
-		}
-		results = append(results, end-start)
-		if end >= number {
-			break
-		}
-	}
-	return results
-}
-
-func GroupString(str string, ops *GroupOpts) []string {
-	results := make([]string, 0)
-
-	countPerGroup := ops.CountPerGroup
-	if countPerGroup == 0 {
-		groupCount := ops.GroupCount
-		if groupCount == 0 {
-			groupCount = 1
-		}
-		countPerGroup = len(str) / ops.GroupCount
-		if len(str)%ops.GroupCount > 0 {
-			countPerGroup += 1
-		}
-	}
-
-	strLen := len(str)
-	var start, end int = 0, 0
-	for {
-		start = end
-		end += countPerGroup
-		if end > strLen {
-			end = strLen
-		}
-		results = append(results, str[start:end])
-		if end >= strLen {
-			break
-		}
-	}
-	return results
-}
-
 // 对数据进行编码，每次编码结果不一样，但是都可以自解码出原来的明文
 func EncodePefish(data string) string {
 	pass := uuid.New().String()
@@ -564,7 +484,7 @@ func EncodePefish(data string) string {
 	c.XORKeyStream(dst, src)
 	rc4Result := hex.EncodeToString(dst)
 
-	passGroups := GroupString(pass, &GroupOpts{
+	passGroups := go_format_string.Group(pass, &go_format_type.GroupOpts{
 		GroupCount: 3,
 	})
 	for i, passGroup := range passGroups {

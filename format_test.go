@@ -298,43 +298,6 @@ func TestFormatType_MustToFloat32(t *testing.T) {
 	go_test_.Equal(t, float32(4546.3526), MustToFloat32(a))
 }
 
-func TestFormatType_GroupSlice(t *testing.T) {
-	strSlice := []string{"a", "b", "c", "d", "e", "f", "g"}
-	group := GroupSlice(strSlice, &GroupOpts{
-		CountPerGroup: 3,
-	})
-	go_test_.Equal(t, 3, len(group))
-	go_test_.Equal(t, 3, len(group[0]))
-	go_test_.Equal(t, "a", group[0][0])
-	go_test_.Equal(t, "c", group[0][2])
-	go_test_.Equal(t, 3, len(group[1]))
-	go_test_.Equal(t, "d", group[1][0])
-	go_test_.Equal(t, "e", group[1][1])
-	go_test_.Equal(t, 1, len(group[2]))
-	go_test_.Equal(t, "g", group[2][0])
-
-	group1 := GroupSlice(strSlice, &GroupOpts{
-		CountPerGroup: 10,
-	})
-	go_test_.Equal(t, 1, len(group1))
-	go_test_.Equal(t, 7, len(group1[0]))
-	go_test_.Equal(t, "a", group1[0][0])
-	go_test_.Equal(t, "g", group1[0][6])
-}
-
-func TestGroupInt(t *testing.T) {
-	results := GroupInt(34, 10)
-	fmt.Println(results)
-}
-
-func TestGroupString(t *testing.T) {
-	str := "gsd449998d88gsgsrt"
-	results := GroupString(str, &GroupOpts{
-		GroupCount: 3,
-	})
-	fmt.Println(results)
-}
-
 func TestUnderscoreToUpperCamelCase(t *testing.T) {
 	result := UnderscoreToCamelCase("gsfghs_bfgbsg_sgg")
 	fmt.Println(result)

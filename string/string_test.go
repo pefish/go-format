@@ -1,8 +1,10 @@
 package go_format_string
 
 import (
+	"fmt"
 	"testing"
 
+	go_format_type "github.com/pefish/go-format/type"
 	go_test_ "github.com/pefish/go-test"
 )
 
@@ -31,4 +33,12 @@ func TestLastIndex(t *testing.T) {
 	go_test_.Equal(t, 7, result)
 	result = LastIndex("123845679", []string{"8", "6"})
 	go_test_.Equal(t, 6, result)
+}
+
+func TestGroupString(t *testing.T) {
+	str := "gsd449998d88gsgsrt"
+	results := Group(str, &go_format_type.GroupOpts{
+		GroupCount: 3,
+	})
+	fmt.Println(results)
 }

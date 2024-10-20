@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	go_format_type "github.com/pefish/go-format/type"
 	"github.com/pkg/errors"
 )
 
@@ -240,4 +241,35 @@ func MustInsert(source string, target string, index int) string {
 		panic(err)
 	}
 	return result
+}
+
+func Group(str string, ops *go_format_type.GroupOpts) []string {
+	results := make([]string, 0)
+
+	countPerGroup := ops.CountPerGroup
+	if countPerGroup == 0 {
+		groupCount := ops.GroupCount
+		if groupCount == 0 {
+			groupCount = 1
+		}
+		countPerGroup = len(str) / ops.GroupCount
+		if len(str)%ops.GroupCount > 0 {
+			countPerGroup += 1
+		}
+	}
+
+	strLen := len(str)
+	var start, end int = 0, 0
+	for {
+		start = end
+		end += countPerGroup
+		if end > strLen {
+			end = strLen
+		}
+		results = append(results, str[start:end])
+		if end >= strLen {
+			break
+		}
+	}
+	return results
 }
