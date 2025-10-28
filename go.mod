@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/davecgh/go-spew v1.1.1
 	github.com/google/uuid v1.6.0
 	github.com/pefish/go-test v0.0.4
 	github.com/pkg/errors v0.9.1

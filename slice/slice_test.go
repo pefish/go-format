@@ -1,6 +1,7 @@
 package go_format_slice
 
 import (
+	"fmt"
 	"testing"
 
 	go_format_type "github.com/pefish/go-format/type"
@@ -35,4 +36,13 @@ func TestFormatType_GroupSlice(t *testing.T) {
 	go_test_.Equal(t, 7, len(group1[0]))
 	go_test_.Equal(t, "a", group1[0][0])
 	go_test_.Equal(t, "g", group1[0][6])
+
+	group2 := Group(strSlice, &go_format_type.GroupOpts{
+		GroupCount: 10,
+	})
+	fmt.Println(group2)
+	// go_test_.Equal(t, 1, len(group1))
+	// go_test_.Equal(t, 7, len(group1[0]))
+	// go_test_.Equal(t, "a", group1[0][0])
+	// go_test_.Equal(t, "g", group1[0][6])
 }
