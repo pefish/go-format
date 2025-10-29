@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 
 	go_format_type "github.com/pefish/go-format/type"
 	"github.com/pkg/errors"
@@ -272,4 +273,18 @@ func Group(str string, ops *go_format_type.GroupOpts) []string {
 		}
 	}
 	return results
+}
+
+// 去掉首尾的中英文标点符号
+func TrimPunct(s string) string {
+	return strings.TrimFunc(s, func(r rune) bool {
+		// unicode.IsPunct/IsSymbol 可识别常见英文标点
+		if unicode.IsPunct(r) || unicode.IsSymbol(r) {
+			return true
+		}
+
+		// 额外补充常见中文标点
+		puncts := "，。、《》？：；“”‘’（）【】『』！～……—·「」"
+		return strings.ContainsRune(puncts, r)
+	})
 }

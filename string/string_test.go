@@ -42,3 +42,9 @@ func TestGroupString(t *testing.T) {
 	})
 	fmt.Println(results)
 }
+
+func TestTrimPunct(t *testing.T) {
+	str := "（混合Symbols!）"
+	result := TrimPunct(str)
+	fmt.Println(result)
+}
