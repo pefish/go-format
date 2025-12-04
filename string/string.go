@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 	"unicode"
+	"unsafe"
 
 	go_format_type "github.com/pefish/go-format/type"
 	"github.com/pkg/errors"
@@ -287,4 +288,13 @@ func TrimPunct(s string) string {
 		puncts := "，。、《》？：；“”‘’（）【】『』！～……—·「」"
 		return strings.ContainsRune(puncts, r)
 	})
+}
+
+func ToBytesUnsafe(s string) []byte {
+	return *(*[]byte)(unsafe.Pointer(
+		&struct {
+			string
+			Cap int
+		}{s, len(s)},
+	))
 }
