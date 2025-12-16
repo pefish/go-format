@@ -1,6 +1,9 @@
 package go_format_slice
 
 import (
+	"fmt"
+
+	"github.com/mitchellh/mapstructure"
 	go_format_int "github.com/pefish/go-format/int"
 	go_format_type "github.com/pefish/go-format/type"
 )
@@ -36,4 +39,26 @@ func Group[T any](slice []T, ops *go_format_type.GroupOpts) [][]T {
 		resultGroup = append(resultGroup, slice[start:start+intValue])
 	}
 	return resultGroup
+}
+
+func ToStruct(dest any, slice_ []any) error {
+	if slice_ == nil {
+		return fmt.Errorf("slice is nil")
+	}
+	config := &mapstructure.DecoderConfig{
+		WeaklyTypedInput: true,
+		TagName:          "json",
+		Result:           &dest,
+	}
+
+	decoder, err := mapstructure.NewDecoder(config)
+	if err != nil {
+		return err
+	}
+
+	err = decoder.Decode(slice_)
+	if err != nil {
+		return err
+	}
+	return nil
 }

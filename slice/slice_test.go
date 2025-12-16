@@ -46,3 +46,27 @@ func TestFormatType_GroupSlice(t *testing.T) {
 	// go_test_.Equal(t, "a", group1[0][0])
 	// go_test_.Equal(t, "g", group1[0][6])
 }
+
+func TestFormatClass_SliceToStruct(t *testing.T) {
+	type Test struct {
+		A uint64 `json:"a"`
+		B string `json:"haha"`
+	}
+	testObj := []Test{}
+	err := ToStruct(
+		&testObj,
+		[]any{
+			map[string]any{
+				`a`:    100,
+				`haha`: `1111`,
+			},
+			map[string]any{
+				`a`:    100,
+				`haha`: `1111`,
+			},
+		},
+	)
+	go_test_.Equal(t, nil, err)
+	go_test_.Equal(t, true, testObj[0].A == 100)
+	go_test_.Equal(t, "1111", testObj[0].B)
+}

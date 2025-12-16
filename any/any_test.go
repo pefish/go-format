@@ -172,3 +172,54 @@ func TestFormatType_MustToFloat32(t *testing.T) {
 	a := "4546.3526"
 	go_test_.Equal(t, float32(4546.3526), MustToFloat32(a))
 }
+
+func TestFormatType_ToStruct(t *testing.T) {
+	type A struct {
+		A1 string `json:"a1"`
+		A2 int    `json:"a2"`
+	}
+	type B struct {
+		A3 string `json:"a1"`
+		A4 int    `json:"a2"`
+	}
+	var a any = A{
+		A1: "test",
+		A2: 123,
+	}
+	var b B
+	err := ToStruct(a, &b)
+	go_test_.Equal(t, nil, err)
+	go_test_.Equal(t, "test", b.A3)
+	go_test_.Equal(t, 123, b.A4)
+
+	aMap := map[string]any{
+		`a1`: "map_test",
+		`a2`: 456,
+	}
+	var b1 B
+	err = ToStruct(aMap, &b1)
+	go_test_.Equal(t, nil, err)
+	go_test_.Equal(t, "map_test", b1.A3)
+	go_test_.Equal(t, 456, b1.A4)
+
+}
+
+func TestFormatClass_StructToMap(t *testing.T) {
+	type Nest struct {
+		C string `json:"c"`
+	}
+	type Test struct {
+		A    uint64 `json:"a"`
+		B    string `json:"haha"`
+		Nest `json:"nest,flatten"`
+	}
+
+	testObj := Test{
+		A:    100,
+		B:    `1111`,
+		Nest: Nest{C: "q"},
+	}
+	testMap := StructToMap(testObj)
+	go_test_.Equal(t, true, testMap["a"].(uint64) == 100)
+	go_test_.Equal(t, "q", testMap["c"].(string))
+}

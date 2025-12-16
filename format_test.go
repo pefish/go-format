@@ -27,68 +27,6 @@ type BaseModel struct {
 	UpdatedAt string `json:"updated_at"`
 }
 
-func TestFormatClass_StructToMap(t *testing.T) {
-	type Nest struct {
-		C string `json:"c"`
-	}
-	type Test struct {
-		A    uint64 `json:"a"`
-		B    string `json:"haha"`
-		Nest `json:"nest,flatten"`
-	}
-
-	testObj := Test{
-		A:    100,
-		B:    `1111`,
-		Nest: Nest{C: "q"},
-	}
-	testMap := StructToMap(testObj)
-	go_test_.Equal(t, true, testMap["a"].(uint64) == 100)
-	go_test_.Equal(t, "q", testMap["c"].(string))
-}
-
-func TestFormatClass_MapToStruct(t *testing.T) {
-	type Test struct {
-		A uint64 `json:"a"`
-		B string `json:"haha"`
-	}
-	testObj := Test{}
-	err := MapToStruct(
-		&testObj,
-		map[string]any{
-			`a`:    100,
-			`haha`: `1111`,
-		},
-	)
-	go_test_.Equal(t, nil, err)
-	go_test_.Equal(t, true, testObj.A == 100)
-	go_test_.Equal(t, "1111", testObj.B)
-}
-
-func TestFormatClass_SliceToStruct(t *testing.T) {
-	type Test struct {
-		A uint64 `json:"a"`
-		B string `json:"haha"`
-	}
-	testObj := []Test{}
-	err := SliceToStruct(
-		&testObj,
-		[]any{
-			map[string]any{
-				`a`:    100,
-				`haha`: `1111`,
-			},
-			map[string]any{
-				`a`:    100,
-				`haha`: `1111`,
-			},
-		},
-	)
-	go_test_.Equal(t, nil, err)
-	go_test_.Equal(t, true, testObj[0].A == 100)
-	go_test_.Equal(t, "1111", testObj[0].B)
-}
-
 func TestFormatType_FetchTags(t *testing.T) {
 	// []*Test{}
 	test_ := []*Test{}

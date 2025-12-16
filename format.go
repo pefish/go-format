@@ -11,9 +11,7 @@ import (
 	"sync"
 	"unicode"
 
-	"github.com/fatih/structs"
 	"github.com/google/uuid"
-	"github.com/mitchellh/mapstructure"
 	go_format_string "github.com/pefish/go-format/string"
 	go_format_type "github.com/pefish/go-format/type"
 	"golang.org/x/text/cases"
@@ -78,60 +76,6 @@ func IsZeroValue(val reflect.Value) bool {
 	default:
 		return val.IsZero()
 	}
-}
-
-func StructToMap(in_ any) map[string]any {
-	if in_ == nil {
-		return map[string]any{}
-	}
-	struct_ := structs.New(in_)
-	struct_.TagName = `json`
-
-	return struct_.Map()
-}
-
-func MapToStruct(dest any, map_ map[string]any) error {
-	if map_ == nil {
-		return fmt.Errorf("map is nil")
-	}
-	config := &mapstructure.DecoderConfig{
-		WeaklyTypedInput: true,
-		TagName:          "json",
-		Result:           &dest,
-	}
-
-	decoder, err := mapstructure.NewDecoder(config)
-	if err != nil {
-		return err
-	}
-
-	err = decoder.Decode(map_)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func SliceToStruct(dest any, slice_ []any) error {
-	if slice_ == nil {
-		return fmt.Errorf("slice is nil")
-	}
-	config := &mapstructure.DecoderConfig{
-		WeaklyTypedInput: true,
-		TagName:          "json",
-		Result:           &dest,
-	}
-
-	decoder, err := mapstructure.NewDecoder(config)
-	if err != nil {
-		return err
-	}
-
-	err = decoder.Decode(slice_)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 // FetchTags

@@ -7,6 +7,9 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+
+	"github.com/fatih/structs"
+	"github.com/mitchellh/mapstructure"
 )
 
 func ToInt32(val any) (int32, error) {
@@ -303,4 +306,32 @@ func IsStruct(v any) bool {
 		t = t.Elem()
 	}
 	return t.Kind() == reflect.Struct
+}
+
+// 通过 json tag 将一个结构体或者 map 转换为另一个结构体
+func ToStruct(from, to any) error {
+	config := &mapstructure.DecoderConfig{
+		WeaklyTypedInput: true,
+		TagName:          "json",
+		Result:           &to,
+	}
+	decoder, err := mapstructure.NewDecoder(config)
+	if err != nil {
+		return err
+	}
+	err = decoder.Decode(from)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func StructToMap(in_ any) map[string]any {
+	if in_ == nil {
+		return map[string]any{}
+	}
+	struct_ := structs.New(in_)
+	struct_.TagName = `json`
+
+	return struct_.Map()
 }
