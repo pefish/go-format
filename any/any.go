@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/big"
 	"reflect"
 	"strconv"
 	"strings"
@@ -83,6 +84,32 @@ func ToUint64(val any) (uint64, error) {
 		return 0, err
 	}
 	return int_, nil
+}
+
+func MustToBigInt(val any) *big.Int {
+	result, err := ToBigInt(val)
+	if err != nil {
+		panic(err)
+	}
+	return result
+}
+
+func ToBigInt(val any) (*big.Int, error) {
+	if val == nil {
+		return nil, errors.New(`nil cannot convert to *big.Int`)
+	}
+	valStr := ToString(val)
+	if valStr == "true" {
+		return big.NewInt(1), nil
+	}
+	if valStr == "false" {
+		return big.NewInt(0), nil
+	}
+	bigInt, ok := new(big.Int).SetString(valStr, 64)
+	if !ok {
+		return nil, fmt.Errorf("cannot convert %v to *big.Int", val)
+	}
+	return bigInt, nil
 }
 
 func MustToUint32(val any) uint32 {
