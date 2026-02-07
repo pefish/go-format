@@ -157,6 +157,11 @@ func TestFormatType_MustToInt32(t *testing.T) {
 	go_test_.Equal(t, int32(4546), MustToInt32(a))
 }
 
+func TestFormatType_MustBigInt(t *testing.T) {
+	a := "0"
+	go_test_.Equal(t, a, MustToBigInt(a).String())
+}
+
 func TestFormatType_MustToUint32(t *testing.T) {
 	a := "4546"
 	go_test_.Equal(t, uint32(4546), MustToUint32(a))

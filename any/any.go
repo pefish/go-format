@@ -105,7 +105,7 @@ func ToBigInt(val any) (*big.Int, error) {
 	if valStr == "false" {
 		return big.NewInt(0), nil
 	}
-	bigInt, ok := new(big.Int).SetString(valStr, 64)
+	bigInt, ok := new(big.Int).SetString(valStr, 10)
 	if !ok {
 		return nil, fmt.Errorf("cannot convert %v to *big.Int", val)
 	}
